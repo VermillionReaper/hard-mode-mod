@@ -18,13 +18,26 @@ public class HardModeMod extends Mod {
                 if (b instanceof Turret) {
                     ItemStack[] req = b.requirements;
                     for (ItemStack i : req) {
-                        i.amount *= 2;
+                        i.amount *= 4;
                     }
-
                     return;
                 }
-                if (b instanceof PowerGenerator) {
-                    ((PowerGenerator) b).powerProduction *= 2f/3f;
+                if (b instanceof Reconstructor){
+                    var consumes = b.consumes.get(ConsumeType.item).items;
+                    for(var i = 0; i < consumes.length; i++){
+                        consumes[i].amount *= 5;
+                    }
+                    return;
+                }
+                if (b instanceof UnitFactory){
+                    var plans = b.plans;
+                    for(var i = 0; i < plans.size; i++){
+                        var stack = plans.get(i).requirements;
+                        for(var j = 0; j < stack.length; j++){
+                            stack[j].amount *= 2;
+                        }
+                    }
+                    return;
                 }
             })
         );
@@ -32,7 +45,7 @@ public class HardModeMod extends Mod {
         //increase units' health on wave call
         Events.on(UnitSpawnEvent.class, e -> {
             Unit u = e.unit;
-            u.health *= 1.6; u.maxHealth *= 1.6;
+            u.health *= 4; u.maxHealth *= 4;
         });
         //increase fabricated enemy drones' health
         Events.on(UnitCreateEvent.class, e -> {
@@ -43,7 +56,7 @@ public class HardModeMod extends Mod {
             (!(Vars.state.isCampaign()) && !(Vars.state.rules.pvp)) ) &&
             //and finally, if a unit is indeed an enemy
             u.team == Vars.state.rules.waveTeam) {
-                u.health *= 1.6; u.maxHealth *= 1.6;
+                u.health *= 4; u.maxHealth *= 4;
             }
         });
 
